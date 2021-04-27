@@ -25,7 +25,7 @@ bool menuChoice() { // Menu system
         int y = getMazeSize(1); // Gets height of maze from user
         std::cin.ignore();
         myMaze.generate(x, y); // Builds a grid of given width, height
-        myMaze.print(); // Prints maze
+        //myMaze.print(); // Prints maze
 
 
         //Makes user interface cleaner
