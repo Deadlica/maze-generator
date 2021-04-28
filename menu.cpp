@@ -25,8 +25,6 @@ bool menuChoice() { // Menu system
         int y = getMazeSize(1); // Gets height of maze from user
         std::cin.ignore();
         myMaze.generate(x, y); // Builds a grid of given width, height
-        //myMaze.print(); // Prints maze
-
 
         //Makes user interface cleaner
         resetGUI();
@@ -38,7 +36,14 @@ bool menuChoice() { // Menu system
         "DFS Solver" << std::endl << 
         "=====================================================" << std::endl;
 
-        //Makes user interface cleaner
+        maze myMaze;
+        int x = getMazeSize(0); // Gets width of maze from user
+        int y = getMazeSize(1); // Gets height of maze from user
+        std::cin.ignore();
+        myMaze.generate(x, y); // Builds a grid of given width, height
+        // Generates solution
+        myMaze.DFS();
+        // Makes user interface cleaner
         resetGUI();
     }
 

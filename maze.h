@@ -14,8 +14,18 @@ public:
     ~maze(); // Destructor
 
     void generate(int x, int y); // Generates grid
-    void DFS(); 
-    void BFS();
+    void DfsGenerator(); // Fills grid with paths
+    void setWallsVisited();
+
+    void DFS(); // Depth-first search solver
+    void BFS(); // Breadth-first search solver
+
+    void UnvisitAllCells();
+    int findStartCellX();
+    int findEndCellX();
+    int setStartCell(); // Sets a random start cell at top row
+    void setEndCell(); // Sets a random end cell as close to bottom right corner
+
     void print(); // Prints maze
 private:
     struct node // A structure representing each cell in the maze
@@ -36,7 +46,7 @@ private:
         int x;
         int y;
     };
-    std::vector<coord> getNeighbours(int x, int y);
+    std::vector<coord> getNeighbours(int x, int y, int check);
     bool isVisitable(int x, int y);
     bool checkSubNeighbours(int x, int y);
     bool isBorder(int x, int y);
