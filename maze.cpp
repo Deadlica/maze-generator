@@ -8,11 +8,11 @@ maze::maze() {
 maze::~maze() {
     std::vector<std::vector<node>>::iterator row;
     std::vector<node>::iterator column;
-    for(row = grid.begin(); row != grid.end(); row++) {
-        for(column = row->begin(); column != row->end(); column++) {
-
+    /*for(row = grid.end(); row != grid.begin(); row++) {
+        for(column = row->end(); column != row->begin(); column++) {
+            node* s = &(*column);
         }
-    }  
+    }  */
 }
 
 void maze::generate(int x, int y) {
@@ -34,6 +34,8 @@ void maze::generate(int x, int y) {
 void maze::DFS() {
     std::stack<coord> stack;
     std::vector<coord> neighbours;
+    s = &grid[0][1];
+    s->graphic = 's';
     coord n;
     stack.push({0, 1});
     while(!stack.empty()) {
@@ -53,7 +55,17 @@ void maze::DFS() {
             stack.pop();
         }
     }
-    
+    int y = grid.size() - 2;
+    for(int x = grid[0].size() - 2; e == nullptr; x--) {
+
+        if(grid[y][x].graphic == ' ') {
+            e = &grid[y + 1][x];
+            e->visited = true;
+            e->graphic = 'e';
+            system("clear");
+            print();
+        }
+    }
 }
 
 void maze::BFS() {
@@ -130,5 +142,5 @@ maze::node::node() {
 
     next = nullptr;
 
-    graphic = '*';
+    graphic = '#';
 }
