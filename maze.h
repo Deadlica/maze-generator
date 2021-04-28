@@ -26,26 +26,22 @@ public:
     int setStartCell(); // Sets a random start cell at top row
     void setEndCell(); // Sets a random end cell as close to bottom right corner
 
+    void printBFS();
     void print(); // Prints maze
 private:
-    struct node // A structure representing each cell in the maze
-    {
-        node();
-        bool visited;
-        bool bot;
-        bool right;
-        bool top;
-        bool left;
-
-        node* next;
-
-        char graphic;
-    };
-
     struct coord {
         int x;
         int y;
     };
+
+    struct node // A structure representing each cell in the maze
+    {
+        node();
+        bool visited;
+        char graphic;
+        coord parent;
+    };
+
     std::vector<coord> getNeighbours(int x, int y, int check);
     bool isVisitable(int x, int y);
     bool checkSubNeighbours(int x, int y);

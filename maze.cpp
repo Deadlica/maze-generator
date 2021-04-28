@@ -82,14 +82,13 @@ void maze::DFS() {
     n.x = findStartCellX();
     endCell.y = grid.size() - 1;
     endCell.x = findEndCellX();
-    grid[endCell.y][endCell.x].visited = false;
-    stack.push({n.x, n.y});
+    stack.push(n);
     while(!stack.empty()) {
         n = stack.top();
         grid[n.y][n.x].visited = true;
         if(n.x == endCell.x && n.y == endCell.y) {
             grid[endCell.y][endCell.x].graphic = '*';
-            stack.push({n.x, n.y});
+            stack.push(n);
             break;
         }
         neighbours = getNeighbours(n.x, n.y, 0);
@@ -116,7 +115,34 @@ void maze::DFS() {
 }
 
 void maze::BFS() {
+    UnvisitAllCells();
+    std::deque<coord> queue;
+    std::vector<coord> neighbours;
+    coord n;
+    coord endCell;
+    n.y = 0;
+    n.x = findStartCellX();
+    grid[n.y][n.x].visited = true;
+    endCell.y = grid.size() - 1;
+    endCell.x = findEndCellX();
+    queue.push_back(n);
+    while(!queue.empty()) {
+        n = queue.front();
+        queue.pop_front();
+        if(n.x == endCell.x && n.y == endCell.y) {
+            break;
+        }
+        neighbours = getNeighbours(n.x, n.y, 0);
+        for(int i = 0; i < neighbours.size(); i++) {
+            grid[neighbours[i].y][neighbours[i].x].visited = true;
+            (grid[neighbours[i].y][neighbours[i].x]).parent = n;
+            queue.push_back(neighbours[i]);
+        }
+    }
 
+    if(queue.empty()) {
+        std::cout << "There's no solution to this maze." << std::endl;
+    }
 }
 
 void maze::UnvisitAllCells() {
@@ -192,8 +218,15 @@ std::vector<maze::coord> maze::getNeighbours(int x, int y, int check) {
         if(isVisitable(x - 1, y)) {
             neighbours.push_back({x - 1, y});
         }
-        if(isVisitable(x, y + 1) || grid[y + 1][x].graphic == 'e') {
-            neighbours.push_back({x, y + 1});
+        if(check == 0) {
+            if(isVisitable(x, y + 1) || grid[y + 1][x].graphic == 'e') {
+                neighbours.push_back({x, y + 1});
+            }
+        }
+        else {
+            if(isVisitable(x, y + 1)) {
+                neighbours.push_back({x, y + 1});
+            }
         }
         if(isVisitable(x, y - 1)) {
             neighbours.push_back({x, y - 1});
@@ -245,6 +278,26 @@ bool maze::isVisitable(int x, int y) {
     return true;
 }
 
+void maze::printBFS() {
+    coord cell;
+    int counter = 1;
+    cell.x = findEndCellX();
+    cell.y = grid.size() - 1;
+    while(grid[cell.y][cell.x].graphic != 's') {
+        grid[cell.y][cell.x].graphic = '*';
+        counter++;
+        cell.x = (grid[cell.y][cell.x]).parent.x;
+        cell.y = (grid[cell.y][cell.x]).parent.y;
+        system("clear");
+        print();
+        system("sleep 0.5s");
+    }
+    grid[cell.y][cell.x].graphic = '*';
+    system("clear");
+    print();
+    std::cout << "Shortest path is " << counter<< " cells." << std::endl;
+}
+
 void maze::print() {
     std::vector<std::vector<node>>::iterator row;
     std::vector<node>::iterator column;
@@ -258,8 +311,7 @@ void maze::print() {
 
 maze::node::node() {
     visited = false;
-
-    next = nullptr;
-
     graphic = '#';
+    parent.x = 0;
+    parent.y = 0;
 }

@@ -53,6 +53,18 @@ bool menuChoice() { // Menu system
         "BFS Solver" << std::endl << 
         "=====================================================" << std::endl;
 
+        maze myMaze;
+        int x = getMazeSize(0); // Gets width of maze from user
+        int y = getMazeSize(1); // Gets height of maze from user
+        std::cin.ignore();
+        myMaze.generate(x, y); // Builds a grid of given width, height
+        // Generates solution
+        myMaze.BFS();
+        
+        std::cout << "Press [ENTER] to see shortest solution.";
+        std::cin.get();
+
+        myMaze.printBFS();
         //Makes user interface cleaner
         resetGUI();
     }
@@ -67,7 +79,7 @@ bool menuChoice() { // Menu system
 }
 
 void resetGUI() {
-    std::cout << "Press ENTER to return to main menu... ";
+    std::cout << "Press [ENTER] to return to main menu... ";
     std::cin.get();
     system("clear");
     printMenu();
