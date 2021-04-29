@@ -1,5 +1,7 @@
 #include "maze.h"
 
+bool maze::shouldAnimate = false;
+
 maze::maze() {
     s = nullptr;
     e = nullptr;
@@ -52,16 +54,18 @@ void maze::DfsGenerator() {
             grid[neighbour.y][neighbour.x].graphic = ' ';
             grid[neighbour.y][neighbour.x].visited = true;
             stack.push(neighbour);
-            system("clear");
-            print();
-            system("sleep 0.01s");
+            if(shouldAnimate) {
+                system("clear");
+                print();
+                system("sleep 0.01s");
+            }
         }
         else { // No visitable neighbours
             stack.pop();
         }
     }
 }
-
+// std::isspace('');
 void maze::setWallsVisited() {
     for(int y = 0; y < grid.size(); y++) {
         for(int x = 0; x < grid[0].size(); x++) {
@@ -103,9 +107,11 @@ void maze::DFS() {
             grid[n.y][n.x].graphic = ' ';
             stack.pop();
         }
-        system("clear");
-        print();
-        system("sleep 0.01s");
+        if(shouldAnimate) {
+            system("clear");
+            print();
+            system("sleep 0.01s");
+        }
     }
     system("clear");
     print();
@@ -120,6 +126,7 @@ void maze::BFS() {
     std::vector<coord> neighbours;
     coord n;
     coord endCell;
+    std::ofstream file("log.txt");
     n.y = 0;
     n.x = findStartCellX();
     grid[n.y][n.x].visited = true;
@@ -135,11 +142,17 @@ void maze::BFS() {
         neighbours = getNeighbours(n.x, n.y, 0);
         for(int i = 0; i < neighbours.size(); i++) {
             grid[neighbours[i].y][neighbours[i].x].visited = true;
+            file <<  "(" << n.x << ", " << n.y << ")" << std::endl;
             (grid[neighbours[i].y][neighbours[i].x]).parent = n;
             queue.push_back(neighbours[i]);
         }
     }
-
+    for(int y = 0; y < grid.size(); y++) {
+        for(int x = 0; x < grid[0].size(); x++) {
+            file <<  "(" << grid[y][x].parent.x << ", " << grid[y][x].parent.y << ")";
+        }
+        file << std::endl;
+    }
     if(queue.empty()) {
         std::cout << "There's no solution to this maze." << std::endl;
     }
@@ -218,16 +231,14 @@ std::vector<maze::coord> maze::getNeighbours(int x, int y, int check) {
         if(isVisitable(x - 1, y)) {
             neighbours.push_back({x - 1, y});
         }
-        if(check == 0) {
-            if(isVisitable(x, y + 1) || grid[y + 1][x].graphic == 'e') {
-                neighbours.push_back({x, y + 1});
-            }
+        if(isVisitable(x, y + 1) || grid[y + 1][x].graphic == 'e') {
+            neighbours.push_back({x, y + 1});
         }
-        else {
+        /*else {
             if(isVisitable(x, y + 1)) {
                 neighbours.push_back({x, y + 1});
             }
-        }
+        }*/
         if(isVisitable(x, y - 1)) {
             neighbours.push_back({x, y - 1});
         }
@@ -280,17 +291,21 @@ bool maze::isVisitable(int x, int y) {
 
 void maze::printBFS() {
     coord cell;
+    coord oldCoords;
     int counter = 1;
     cell.x = findEndCellX();
     cell.y = grid.size() - 1;
+    std::ofstream file("log.txt");
     while(grid[cell.y][cell.x].graphic != 's') {
         grid[cell.y][cell.x].graphic = '*';
+        file <<  "(" << cell.x << ", " << cell.y << ")" << std::endl;
         counter++;
-        cell.x = (grid[cell.y][cell.x]).parent.x;
-        cell.y = (grid[cell.y][cell.x]).parent.y;
+        oldCoords = cell;
+        cell.x = (grid[oldCoords.y][oldCoords.x]).parent.x;
+        cell.y = (grid[oldCoords.y][oldCoords.x]).parent.y;
         system("clear");
         print();
-        system("sleep 0.5s");
+        system("sleep 0.01s");
     }
     grid[cell.y][cell.x].graphic = '*';
     system("clear");

@@ -7,9 +7,11 @@
 #include <iterator>
 #include <stack>
 #include <cstdlib>
+#include <fstream>
 
 class maze {
 public:
+    static bool shouldAnimate;
     maze(); // Constructor
     ~maze(); // Destructor
 
