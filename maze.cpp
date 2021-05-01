@@ -8,13 +8,16 @@ maze::maze() {
 }
 
 maze::~maze() {
-    std::vector<std::vector<node>>::iterator row;
-    std::vector<node>::iterator column;
-    /*for(row = grid.end(); row != grid.begin(); row++) {
-        for(column = row->end(); column != row->begin(); column++) {
-            node* s = &(*column);
+    
+    /*while(!grid.empty()) {
+        while(!grid[grid.size() - 1].empty()) {
+            remover = &(grid[grid.size() - 1][grid[grid.size() - 1].size() - 1]);
+            grid[grid.size() - 1].pop_back();
+            
+            remover = nullptr;
         }
-    }  */
+        grid.pop_back();
+    }*/
 }
 
 void maze::generate(int x, int y) {
@@ -22,18 +25,20 @@ void maze::generate(int x, int y) {
         std::vector<node> gridRow;
         for(int j = 0; j < x; j++) { // Iterate through columns
             node* n = new node;
-            if(i == 0 || i == (y - 1) || j == 0 || j == (x - 1)) { //Checks if it's outer walls
-                n->visited = true;
-            }
             gridRow.push_back(*n);
         }
         grid.push_back(gridRow);
     }
-    DfsGenerator(); // Grid done, now filling paths
-    setEndCell(); // Sets goal cell
+}
+
+void maze::generateFromFile(int x, int y, std::vector<std::string> stringMaze) {
+    generate(x, y);
+    for(int y = 0; y < grid.size(); y++) {
+        for(int x = 0; x < grid[0].size(); x++) {
+            grid[y][x].graphic = stringMaze[y][x];
+        }
+    }
     setWallsVisited();
-    system("clear");
-    print();
 }
 
 void maze::DfsGenerator() {
@@ -64,6 +69,10 @@ void maze::DfsGenerator() {
             stack.pop();
         }
     }
+    setEndCell(); // Sets goal cell
+    setWallsVisited();
+    system("clear");
+    print();
 }
 // std::isspace('');
 void maze::setWallsVisited() {
@@ -110,7 +119,7 @@ void maze::DFS() {
         if(shouldAnimate) {
             system("clear");
             print();
-            system("sleep 0.01s");
+            system("sleep 0.04s");
         }
     }
     system("clear");
@@ -303,9 +312,11 @@ void maze::printBFS() {
         oldCoords = cell;
         cell.x = (grid[oldCoords.y][oldCoords.x]).parent.x;
         cell.y = (grid[oldCoords.y][oldCoords.x]).parent.y;
-        system("clear");
-        print();
-        system("sleep 0.01s");
+        if(shouldAnimate) {
+            system("clear");
+            print();
+            system("sleep 0.04s");
+        }
     }
     grid[cell.y][cell.x].graphic = '*';
     system("clear");
@@ -314,11 +325,9 @@ void maze::printBFS() {
 }
 
 void maze::print() {
-    std::vector<std::vector<node>>::iterator row;
-    std::vector<node>::iterator column;
-    for(row = grid.begin(); row != grid.end(); row++) {
-        for(column = row->begin(); column != row->end(); column++) {
-            std::cout << column->graphic;
+    for(int y = 0; y < grid.size(); y++) {
+        for(int x = 0; x < grid[0].size(); x++) {
+            std::cout << grid[y][x].graphic;
         }
         std::cout << std::endl;
     }

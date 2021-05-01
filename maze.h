@@ -16,6 +16,7 @@ public:
     ~maze(); // Destructor
 
     void generate(int x, int y); // Generates grid
+    void generateFromFile(int x, int y, std::vector<std::string> stringMaze);
     void DfsGenerator(); // Fills grid with paths
     void setWallsVisited();
 
