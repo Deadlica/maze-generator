@@ -30,6 +30,6 @@ To see the solution in a separate .txt file
 * The width and height of maze must be of odd numbers.
 * All walls are represented by non-whitespaces.
 * All paths are represented by ' '.
-* There must be a 's' on the top row representing the start cell.
-* There must be a 'e' on the bottom row representing the end cell.
+* There must be a 'S' on the top row representing the start cell.
+* There must be a 'E' on the bottom row representing the end cell.
 * The start and end cell chars cannot be in a corner.
