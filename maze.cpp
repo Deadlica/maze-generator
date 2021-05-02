@@ -6,6 +6,7 @@ Labyrint Projekt
 Siktar på betyget A
 */
 
+#include <unistd.h>
 #include "maze.h"
 
 bool maze::shouldAnimate = false;
@@ -16,7 +17,6 @@ maze::maze() {
 }
 
 maze::~maze() {
-    
     /*while(!grid.empty()) {
         while(!grid[grid.size() - 1].empty()) {
             remover = &(grid[grid.size() - 1][grid[grid.size() - 1].size() - 1]);
@@ -43,10 +43,10 @@ void maze::generateFromFile(int x, int y, std::vector<std::string> stringMaze) {
     generate(x, y);
     for(int y = 0; y < grid.size(); y++) {
         for(int x = 0; x < grid[0].size(); x++) {
-            if(stringMaze[y][x] != ' ' && stringMaze[y][x] != 'S' && stringMaze[y][x] != 'E'){
+            if(stringMaze[y][x] != ' ' && stringMaze[y][x] != 'S' && stringMaze[y][x] != 'E'){ // Sets all walls to '#'
                 grid[y][x].graphic = '#';
             }
-            else {
+            else { // Sets paths to ' ' and start, goal to 'S', 'E'
                 grid[y][x].graphic = stringMaze[y][x];
             }
         }
@@ -54,7 +54,7 @@ void maze::generateFromFile(int x, int y, std::vector<std::string> stringMaze) {
     setWallsVisited();
 }
 
-void maze::DfsGenerator() {
+void maze::DfsGenerator() { // Generates paths in the grid matrix
     std::stack<coord> stack;
     std::vector<coord> neighbours;
     int x = setStartCell();
@@ -98,7 +98,7 @@ void maze::setWallsVisited() {
     }
 }
 
-void maze::DFS() {
+void maze::DFS() { // Finds a solution with depth-first search
     UnvisitAllCells();
     std::stack<coord> stack;
     std::vector<coord> neighbours;
@@ -112,21 +112,21 @@ void maze::DFS() {
     while(!stack.empty()) {
         n = stack.top();
         grid[n.y][n.x].visited = true;
-        if(n.x == endCell.x && n.y == endCell.y) {
+        if(n.x == endCell.x && n.y == endCell.y) { // Reached end
             grid[endCell.y][endCell.x].graphic = '*';
             stack.push(n);
             break;
         }
-        neighbours = getNeighbours(n.x, n.y, 0);
+        neighbours = getNeighbours(n.x, n.y, 0); // Gets visitable neighbours
         if(!neighbours.empty()) {
             stack.push(n);
-            for(int i = 0; i < neighbours.size(); i++) {
+            for(int i = 0; i < neighbours.size(); i++) { // Adds them to the stack
                 stack.push(neighbours[i]);
             }
             grid[n.y][n.x].graphic = '*';
         }
         else {
-            grid[n.y][n.x].graphic = ' ';
+            grid[n.y][n.x].graphic = ' '; // When backtracking
             stack.pop();
         }
         if(shouldAnimate) {
@@ -157,23 +157,23 @@ void maze::BFS() {
     while(!queue.empty()) {
         n = queue.front();
         queue.pop_front();
-        if(n.x == endCell.x && n.y == endCell.y) {
+        if(n.x == endCell.x && n.y == endCell.y) { // Reached end
             break;
         }
-        neighbours = getNeighbours(n.x, n.y, 0);
-        for(int i = 0; i < neighbours.size(); i++) {
+        neighbours = getNeighbours(n.x, n.y, 0); // Gets visitable neighbours
+        for(int i = 0; i < neighbours.size(); i++) { // Add them to the queue, remembers its previous cell
             grid[neighbours[i].y][neighbours[i].x].visited = true;
             (grid[neighbours[i].y][neighbours[i].x]).parent = n;
             queue.push_back(neighbours[i]);
         }
     }
 
-    if(grid[endCell.y][endCell.x].parent.x == 0 && grid[endCell.y][endCell.x].parent.y == 0) {
+    if(grid[endCell.y][endCell.x].parent.x == 0 && grid[endCell.y][endCell.x].parent.y == 0) { // End cell has no parent coords
         std::cout << "There's no solution to this maze." << std::endl;
     }
 }
 
-void maze::UnvisitAllCells() {
+void maze::UnvisitAllCells() { // Unvisits all paths including 'S' and 'E'
     for(int y = 0; y < grid.size(); y++) {
         for(int x = 0; x < grid[0].size(); x++) {
             if(grid[y][x].graphic == ' ' || grid[y][x].graphic == 'S' || grid[y][x].graphic == 'E') {
@@ -183,7 +183,7 @@ void maze::UnvisitAllCells() {
     }
 }
 
-int maze::findStartCellX() {
+int maze::findStartCellX() { // Finds the x coordinate of 'S'
     int x;
     for(x = 0; x < grid[0].size(); x++) {
         if(grid[0][x].graphic == 'S') {
@@ -193,7 +193,7 @@ int maze::findStartCellX() {
     return x;
 }
 
-int maze::findEndCellX() {
+int maze::findEndCellX() { // Finds the x coordinate of 'E'
     int x;
     for(x = 0; x < grid[0].size(); x++) {
         if(grid[grid.size() - 1][x].graphic == 'E') {
@@ -225,7 +225,7 @@ std::vector<maze::coord> maze::getNeighbours(int x, int y, int check) {
 
     // Checks if cell in all directions are visitable and also
     // if the neigbour has 3 or more visitable cells
-    if(check == 1) {
+    if(check == 1) { // When generating paths
         if(isVisitable(x + 1, y) && checkSubNeighbours(x + 1, y)) {
             neighbours.push_back({x + 1, y});
         }
@@ -239,7 +239,7 @@ std::vector<maze::coord> maze::getNeighbours(int x, int y, int check) {
             neighbours.push_back({x, y - 1});
         }
     }
-    else {
+    else { // When finding solution path
         if(isVisitable(x + 1, y)) {
             neighbours.push_back({x + 1, y});
         }
@@ -249,11 +249,6 @@ std::vector<maze::coord> maze::getNeighbours(int x, int y, int check) {
         if(isVisitable(x, y + 1) || grid[y + 1][x].graphic == 'E') {
             neighbours.push_back({x, y + 1});
         }
-        /*else {
-            if(isVisitable(x, y + 1)) {
-                neighbours.push_back({x, y + 1});
-            }
-        }*/
         if(isVisitable(x, y - 1)) {
             neighbours.push_back({x, y - 1});
         }
@@ -264,8 +259,7 @@ std::vector<maze::coord> maze::getNeighbours(int x, int y, int check) {
 bool maze::checkSubNeighbours(int x, int y) {
     int numVisitable = 0;
 
-    // If subneighbours are all visited then the maze wouldnt
-    // "maze" lookin walls.
+    // If subneighbours are all visited then the maze wouldn't have "maze" looking walls.
 
     if(isVisitable(x + 1, y) || isBorder(x + 1, y)) {
         numVisitable++;
@@ -305,27 +299,33 @@ bool maze::isVisitable(int x, int y) {
 }
 
 void maze::printBFS() {
+    coord badCoords = {0, 0};
     coord cell;
     coord oldCoords;
     int counter = 1;
     cell.x = findEndCellX();
     cell.y = grid.size() - 1;
-    while(grid[cell.y][cell.x].graphic != 'S') {
-        grid[cell.y][cell.x].graphic = '*';
-        counter++;
-        oldCoords = cell;
-        cell.x = (grid[oldCoords.y][oldCoords.x]).parent.x;
-        cell.y = (grid[oldCoords.y][oldCoords.x]).parent.y;
-        if(shouldAnimate) {
-            system("clear");
-            print();
-            system("sleep 0.04s");
+    if(!(grid[cell.y][cell.x].parent.x == 0 && grid[cell.y][cell.x].parent.y == 0)) {
+        while(grid[cell.y][cell.x].graphic != 'S') { // Going backwards in maze till cell is at 'S' cell
+            grid[cell.y][cell.x].graphic = '*'; // Change graphic
+            counter++; // Counts amount of cell steps
+            oldCoords = cell;
+            // Change cell to parent coords
+            cell.x = (grid[oldCoords.y][oldCoords.x]).parent.x;
+            cell.y = (grid[oldCoords.y][oldCoords.x]).parent.y;
+            if(shouldAnimate) {
+                system("clear");
+                print();
+                system("sleep 0.04s");
+            }
         }
+        grid[cell.y][cell.x].graphic = '*'; // Change S as well
+        if(isatty(STDIN_FILENO)){
+            system("clear");
+        }
+        print();
+        std::cout << "Shortest path is " << counter<< " cells." << std::endl;
     }
-    grid[cell.y][cell.x].graphic = '*';
-    system("clear");
-    print();
-    std::cout << "Shortest path is " << counter<< " cells." << std::endl;
 }
 
 void maze::print() {

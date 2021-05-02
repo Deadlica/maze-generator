@@ -16,10 +16,10 @@ bool checkMazeFile(const std::vector<std::string> tempMaze) {
     if(!checkMazeSize(tempMaze)) { // Checks that maze width is okay
         return false;
     }
-    if(!checkMazeBorder(tempMaze)) {
+    if(!checkMazeBorder(tempMaze)) { // Checks border chars
         return false;
     }
-    if(!checkMazeGraphics(tempMaze)) {
+    if(!checkMazeGraphics(tempMaze)) { // Checks the chars inside the border
         return false;
     }
     return true;
@@ -33,7 +33,7 @@ bool checkMazeSize(const std::vector<std::string> tempMaze) {
     }
 
     for(auto it : tempMaze) {
-        if(it.length() != rowLength) {
+        if(it.length() != rowLength) { // A row being different size than others
             std::cout << "Maze width is invalid" << std::endl;
             return false;
         }
@@ -43,12 +43,12 @@ bool checkMazeSize(const std::vector<std::string> tempMaze) {
 
 bool checkMazeBorder(const std::vector<std::string> tempMaze) {
     int E = 0, S = 0;
-    for(int i = 1; i < tempMaze[0].length() - 1; i++) { // Looks for s in top row
+    for(int i = 1; i < tempMaze[0].length() - 1; i++) { // Looks for S in top row
         if(tempMaze[0][i] == 'S') {
             S++;
         }
     }
-    for(int i = 1; i < tempMaze[tempMaze.size() - 1].length() - 1; i++) { // Looks for e in bottom row
+    for(int i = 1; i < tempMaze[tempMaze.size() - 1].length() - 1; i++) { // Looks for E in bottom row
         if(tempMaze[tempMaze.size() - 1][i] == 'E') {
             E++;
         }
@@ -61,7 +61,7 @@ bool checkMazeBorder(const std::vector<std::string> tempMaze) {
     for(int i = 0; i < tempMaze.size(); i++) { // Checks maze border graphics
         if(i == 0 || i == tempMaze.size() - 1) { // Checks top and bottom row
             for(int j = 0; j < tempMaze[i].size(); j++) {
-                if(!validWallChar(tempMaze[i][j]) && tempMaze[i][j] != 'S' && tempMaze[i][j] != 'E' || E > 1 || S > 1) {
+                if(!validWallChar(tempMaze[i][j]) && tempMaze[i][j] != 'S' && tempMaze[i][j] != 'E' || E > 1 || S > 1) { // Invalid char or multiple S/E
                     return false;
                 }
                 if(tempMaze[i][j] == 'E') {
@@ -82,10 +82,10 @@ bool checkMazeBorder(const std::vector<std::string> tempMaze) {
     return true;
 }
 
-bool checkMazeGraphics(const std::vector<std::string> tempMaze) {
+bool checkMazeGraphics(const std::vector<std::string> tempMaze) { // Checks the chars inside the border
     for(int y = 1; y < tempMaze.size() - 1; y++) {
         for(int x = 1; x < tempMaze[y].length() - 1; x++) {
-            if(!validWallChar(tempMaze[y][x]) && tempMaze[y][x] != ' ') {
+            if(!validWallChar(tempMaze[y][x]) && tempMaze[y][x] != ' ') { // Invalid char graphic
                 return false;
             }
         }
@@ -93,15 +93,15 @@ bool checkMazeGraphics(const std::vector<std::string> tempMaze) {
     return true;
 }
 
-int getMazeFileWidth(const std::vector<std::string> tempMaze) {
+int getMazeFileWidth(const std::vector<std::string> tempMaze) { // Returns the maze width
     return tempMaze[0].length();
 }
 
-int getMazeFileHeight(const std::vector<std::string> tempMaze) {
+int getMazeFileHeight(const std::vector<std::string> tempMaze) { // Returns the maze height
     return tempMaze.size();
 }
 
-bool validWallChar(char graphic) {
+bool validWallChar(char graphic) { // Checks if a char is valid for the maze
     if(graphic >= '!' && graphic < 'E' || graphic > 'E' && graphic < 'S' || graphic > 'S' && graphic <= '~') {
         return true;
     }

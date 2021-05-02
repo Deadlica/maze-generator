@@ -21,7 +21,6 @@ int main(int argc, char** argv) {
         }
     }
     srand(time(0));
-    system("clear"); // Clears terminal
     if(!isatty(STDIN_FILENO)) {
         std::vector<std::string> tempMaze;
         std::string mazeRow;
@@ -40,8 +39,11 @@ int main(int argc, char** argv) {
         else {
             std::cout << "Invalid maze file given" << std::endl;
         }
+        
     }
+
     else {
+        system("clear"); // Clears terminal
         printMenu(); // Print the menu
         while(menuChoice()) { ; }
     }
