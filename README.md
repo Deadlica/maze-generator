@@ -12,7 +12,7 @@ To generates random mazes type this in terminal:
 
 ## Using your own mazes from .txt files
 
-To solve you own maze that you have saved as a txt file type the following command in terminal
+To solve you own maze that you have saved as a txt file type the following command in terminal:
 
 ```c++
 ./maze < <filename>.txt
@@ -23,7 +23,7 @@ Or you can type:
 ./maze < <filename>.txt > <solutionfile>.txt
 ```
 
-To be see the solution in a separate .txt file
+To see the solution in a separate .txt file
 
 ## Rules for using your own .txt maze
 
