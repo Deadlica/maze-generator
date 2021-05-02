@@ -1,3 +1,11 @@
+/*
+Samuel Greenberg
+02/05/2021
+DT019G
+Labyrint Projekt
+Siktar på betyget A
+*/
+
 #include "maze.h"
 
 bool maze::shouldAnimate = false;
@@ -35,7 +43,12 @@ void maze::generateFromFile(int x, int y, std::vector<std::string> stringMaze) {
     generate(x, y);
     for(int y = 0; y < grid.size(); y++) {
         for(int x = 0; x < grid[0].size(); x++) {
-            grid[y][x].graphic = stringMaze[y][x];
+            if(stringMaze[y][x] != ' ' && stringMaze[y][x] != 'S' && stringMaze[y][x] != 'E'){
+                grid[y][x].graphic = '#';
+            }
+            else {
+                grid[y][x].graphic = stringMaze[y][x];
+            }
         }
     }
     setWallsVisited();
@@ -46,7 +59,7 @@ void maze::DfsGenerator() {
     std::vector<coord> neighbours;
     int x = setStartCell();
     s = &grid[0][x];
-    s->graphic = 's';
+    s->graphic = 'S';
     coord n;
     stack.push({x, 0});
     while(!stack.empty()) {
@@ -135,7 +148,6 @@ void maze::BFS() {
     std::vector<coord> neighbours;
     coord n;
     coord endCell;
-    std::ofstream file("log.txt");
     n.y = 0;
     n.x = findStartCellX();
     grid[n.y][n.x].visited = true;
@@ -151,18 +163,12 @@ void maze::BFS() {
         neighbours = getNeighbours(n.x, n.y, 0);
         for(int i = 0; i < neighbours.size(); i++) {
             grid[neighbours[i].y][neighbours[i].x].visited = true;
-            file <<  "(" << n.x << ", " << n.y << ")" << std::endl;
             (grid[neighbours[i].y][neighbours[i].x]).parent = n;
             queue.push_back(neighbours[i]);
         }
     }
-    for(int y = 0; y < grid.size(); y++) {
-        for(int x = 0; x < grid[0].size(); x++) {
-            file <<  "(" << grid[y][x].parent.x << ", " << grid[y][x].parent.y << ")";
-        }
-        file << std::endl;
-    }
-    if(queue.empty()) {
+
+    if(grid[endCell.y][endCell.x].parent.x == 0 && grid[endCell.y][endCell.x].parent.y == 0) {
         std::cout << "There's no solution to this maze." << std::endl;
     }
 }
@@ -170,7 +176,7 @@ void maze::BFS() {
 void maze::UnvisitAllCells() {
     for(int y = 0; y < grid.size(); y++) {
         for(int x = 0; x < grid[0].size(); x++) {
-            if(grid[y][x].graphic == ' ' || grid[y][x].graphic == 's' || grid[y][x].graphic == 'e') {
+            if(grid[y][x].graphic == ' ' || grid[y][x].graphic == 'S' || grid[y][x].graphic == 'E') {
                 grid[y][x].visited = false;
             }
         }
@@ -180,7 +186,7 @@ void maze::UnvisitAllCells() {
 int maze::findStartCellX() {
     int x;
     for(x = 0; x < grid[0].size(); x++) {
-        if(grid[0][x].graphic == 's') {
+        if(grid[0][x].graphic == 'S') {
             return x;
         }
     }
@@ -190,7 +196,7 @@ int maze::findStartCellX() {
 int maze::findEndCellX() {
     int x;
     for(x = 0; x < grid[0].size(); x++) {
-        if(grid[grid.size() - 1][x].graphic == 'e') {
+        if(grid[grid.size() - 1][x].graphic == 'E') {
             return x;
         }
     }
@@ -209,7 +215,7 @@ void maze::setEndCell() { // Looks for a visited cell as close to bottom right c
             // Sets end cell
             e = &grid[y + 1][x];
             e->visited = true;
-            e->graphic = 'e';
+            e->graphic = 'E';
         }
     }
 }
@@ -240,7 +246,7 @@ std::vector<maze::coord> maze::getNeighbours(int x, int y, int check) {
         if(isVisitable(x - 1, y)) {
             neighbours.push_back({x - 1, y});
         }
-        if(isVisitable(x, y + 1) || grid[y + 1][x].graphic == 'e') {
+        if(isVisitable(x, y + 1) || grid[y + 1][x].graphic == 'E') {
             neighbours.push_back({x, y + 1});
         }
         /*else {
@@ -304,10 +310,8 @@ void maze::printBFS() {
     int counter = 1;
     cell.x = findEndCellX();
     cell.y = grid.size() - 1;
-    std::ofstream file("log.txt");
-    while(grid[cell.y][cell.x].graphic != 's') {
+    while(grid[cell.y][cell.x].graphic != 'S') {
         grid[cell.y][cell.x].graphic = '*';
-        file <<  "(" << cell.x << ", " << cell.y << ")" << std::endl;
         counter++;
         oldCoords = cell;
         cell.x = (grid[oldCoords.y][oldCoords.x]).parent.x;

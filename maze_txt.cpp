@@ -1,3 +1,11 @@
+/*
+Samuel Greenberg
+02/05/2021
+DT019G
+Labyrint Projekt
+Siktar på betyget A
+*/
+
 #include "maze_txt.h"
 
 bool checkMazeFile(const std::vector<std::string> tempMaze) {
@@ -34,39 +42,39 @@ bool checkMazeSize(const std::vector<std::string> tempMaze) {
 }
 
 bool checkMazeBorder(const std::vector<std::string> tempMaze) {
-    int e = 0, s = 0;
+    int E = 0, S = 0;
     for(int i = 1; i < tempMaze[0].length() - 1; i++) { // Looks for s in top row
-        if(tempMaze[0][i] == 's') {
-            s++;
+        if(tempMaze[0][i] == 'S') {
+            S++;
         }
     }
     for(int i = 1; i < tempMaze[tempMaze.size() - 1].length() - 1; i++) { // Looks for e in bottom row
-        if(tempMaze[tempMaze.size() - 1][i] == 'e') {
-            e++;
+        if(tempMaze[tempMaze.size() - 1][i] == 'E') {
+            E++;
         }
     }
-    if(e == 0 || e > 1 || s == 0 || s > 1) { // if there's no or multiple starts/ends
+    if(E == 0 || E > 1 || S == 0 || S > 1) { // if there's no or multiple starts/ends
         return false;
     }
-    s = 0;
-    e = 0;
+    S = 0;
+    E = 0;
     for(int i = 0; i < tempMaze.size(); i++) { // Checks maze border graphics
         if(i == 0 || i == tempMaze.size() - 1) { // Checks top and bottom row
             for(int j = 0; j < tempMaze[i].size(); j++) {
-                if(tempMaze[i][j] != '#' && tempMaze[i][j] != 's' && tempMaze[i][j] != 'e' || e > 1 || s > 1) {
+                if(!validWallChar(tempMaze[i][j]) && tempMaze[i][j] != 'S' && tempMaze[i][j] != 'E' || E > 1 || S > 1) {
                     return false;
                 }
-                if(tempMaze[i][j] == 'e') {
-                    e++;
+                if(tempMaze[i][j] == 'E') {
+                    E++;
                 }
-                if(tempMaze[i][j] == 's') {
-                    s++;
+                if(tempMaze[i][j] == 'S') {
+                    S++;
                 }
 
             }
         }
         else { // Checks other rows
-            if(tempMaze[i][0] != '#' || tempMaze[i][tempMaze[i].size() - 1] != '#') {
+            if(!validWallChar(tempMaze[i][0]) || !validWallChar(tempMaze[i][tempMaze[i].size() - 1])) {
                 return false;
             }
         }
@@ -77,7 +85,7 @@ bool checkMazeBorder(const std::vector<std::string> tempMaze) {
 bool checkMazeGraphics(const std::vector<std::string> tempMaze) {
     for(int y = 1; y < tempMaze.size() - 1; y++) {
         for(int x = 1; x < tempMaze[y].length() - 1; x++) {
-            if(tempMaze[y][x] != '#' && tempMaze[y][x] != ' ') {
+            if(!validWallChar(tempMaze[y][x]) && tempMaze[y][x] != ' ') {
                 return false;
             }
         }
@@ -91,4 +99,11 @@ int getMazeFileWidth(const std::vector<std::string> tempMaze) {
 
 int getMazeFileHeight(const std::vector<std::string> tempMaze) {
     return tempMaze.size();
+}
+
+bool validWallChar(char graphic) {
+    if(graphic >= '!' && graphic < 'E' || graphic > 'E' && graphic < 'S' || graphic > 'S' && graphic <= '~') {
+        return true;
+    }
+    return false;
 }

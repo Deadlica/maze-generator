@@ -1,3 +1,11 @@
+/*
+Samuel Greenberg
+02/05/2021
+DT019G
+Labyrint Projekt
+Siktar på betyget A
+*/
+
 #ifndef MAZE_H
 #define MAZE_H
 
@@ -7,7 +15,6 @@
 #include <iterator>
 #include <stack>
 #include <cstdlib>
-#include <fstream>
 
 class maze {
 public:

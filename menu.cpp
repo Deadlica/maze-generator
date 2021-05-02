@@ -1,3 +1,11 @@
+/*
+Samuel Greenberg
+02/05/2021
+DT019G
+Labyrint Projekt
+Siktar på betyget A
+*/
+
 #include "menu.h"
 #include "maze.h"
 
@@ -19,7 +27,7 @@ bool menuChoice() { // Menu system
     }
 
     else if(choice == "2"){ // Generates a maze and solves it with Depth-First search
-        BFSSOLVER();
+        DFSSOLVER();
     }
 
     else if(choice == "3"){ // Generates a maze and solves it with Breadth-First search
@@ -47,28 +55,49 @@ void GenerateMaze() {
     std::cout << "=====================================================" << std::endl <<
     "Generate Maze" << std::endl << 
     "=====================================================" << std::endl;
+    std::string input = sizeOptions();
 
     maze myMaze;
-    int x = getMazeSize(0); // Gets width of maze from user
-    int y = getMazeSize(1); // Gets height of maze from user
-    std::cin.ignore();
-    myMaze.generate(x, y); // Builds a grid of given width, height
+    if(input == "2") {
+        system("clear");
+        std::cout << "=====================================================" << std::endl <<
+        "Generate Maze" << std::endl << 
+        "=====================================================" << std::endl;
+        int x = getMazeSize(0); // Gets width of maze from user
+        int y = getMazeSize(1); // Gets height of maze from user
+        std::cin.ignore();
+        myMaze.generate(x, y); // Builds a grid of given width, height
+    }
+    else if(input == "1") {
+        myMaze.generate(11, 11);
+    }
     myMaze.DfsGenerator(); // Grid done, now filling paths
     //Makes user interface cleaner
     resetGUI();
 }
 
-void DFSSolver() {
+void DFSSOLVER() {
     system("clear");
     std::cout << "=====================================================" << std::endl <<
     "DFS Solver" << std::endl << 
     "=====================================================" << std::endl;
+    std::string input = sizeOptions();
 
     maze myMaze;
-    int x = getMazeSize(0); // Gets width of maze from user
-    int y = getMazeSize(1); // Gets height of maze from user
-    std::cin.ignore();
-    myMaze.generate(x, y); // Builds a grid of given width, height
+    if(input == "2"){
+        system("clear");
+        std::cout << "=====================================================" << std::endl <<
+        "DFS Solver" << std::endl << 
+        "=====================================================" << std::endl;
+        int x = getMazeSize(0); // Gets width of maze from user
+        int y = getMazeSize(1); // Gets height of maze from user
+        std::cin.ignore();
+        myMaze.generate(x, y); // Builds a grid of given width, height
+    }
+    else if(input == "1") {
+        myMaze.generate(11, 11);
+    }
+
     myMaze.DfsGenerator(); // Grid done, now filling paths
     std::cout << "Press [ENTER] to see DFS solution.";
     std::cin.get();
@@ -84,12 +113,22 @@ void BFSSOLVER(){
     std::cout << "=====================================================" << std::endl <<
     "BFS Solver" << std::endl << 
     "=====================================================" << std::endl;
+    std::string input = sizeOptions();
 
     maze myMaze;
-    int x = getMazeSize(0); // Gets width of maze from user
-    int y = getMazeSize(1); // Gets height of maze from user
-    std::cin.ignore();
-    myMaze.generate(x, y); // Builds a grid of given width, height
+    if(input == "2") {
+        system("clear");
+        std::cout << "=====================================================" << std::endl <<
+        "BFS Solver" << std::endl << 
+        "=====================================================" << std::endl;
+        int x = getMazeSize(0); // Gets width of maze from user
+        int y = getMazeSize(1); // Gets height of maze from user
+        std::cin.ignore();
+        myMaze.generate(x, y); // Builds a grid of given width, height
+    }
+    else if(input == "1") {
+        myMaze.generate(11, 11);
+    }
     myMaze.DfsGenerator(); // Grid done, now filling paths
     // Generates solution
     myMaze.BFS();
@@ -116,6 +155,23 @@ std::string userInput() { // Gets a user input for the menu options
         }
     }
     return choice;
+}
+
+std::string sizeOptions() {
+    std::cout << "1. Default Size" << std::endl <<
+    "2. Custom Size" << std::endl;
+    std::string input;
+    while(getline(std::cin, input)) {
+        if(input == "1" || input == "2") {
+            break;
+        }
+        else {
+            std::cerr << "Invalid menu command!" << std::endl <<
+            "Try Again!" << std::endl;
+        }
+    }
+    return input;
+
 }
 
 int getMazeSize(int check) { // Get a size for maze width or height

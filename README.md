@@ -28,7 +28,7 @@ To be see the solution in a separate .txt file
 ## Rules for using your own .txt maze
 
 * The width and height of maze must be of odd numbers.
-* All walls are represented by '#'.
+* All walls are represented by non-whitespaces.
 * All paths are represented by ' '.
 * There must be a 's' on the top row representing the start cell.
 * There must be a 'e' on the bottom row representing the end cell.

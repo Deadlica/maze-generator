@@ -1,3 +1,11 @@
+/*
+Samuel Greenberg
+02/05/2021
+DT019G
+Labyrint Projekt
+Siktar på betyget A
+*/
+
 #include <iostream>
 #include <unistd.h>
 #include "maze.h"
