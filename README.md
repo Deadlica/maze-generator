@@ -1,6 +1,6 @@
 # MAZE GENERATOR
 
-This program generates mazes and solves with either a depth-first search or a breadth-first search.
+This program generates mazes with either dfs or bfs algorithms. It can also solve them with either a depth-first search or a breadth-first search.
 
 ## Normal usage
 
@@ -8,6 +8,7 @@ To generates random mazes type this in terminal:
 
 ```bash
 ./maze
+./maze --animate //Adds animation when generating
 ```
 
 ## Using your own mazes from .txt files
