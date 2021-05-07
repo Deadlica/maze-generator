@@ -19,6 +19,34 @@ void printMenu() { // Printing menu
     "4. Quit" << std::endl;
 }
 
+void print1() {
+    system("clear");
+    std::cout << "=====================================================" << std::endl <<
+    "Generate Maze" << std::endl << 
+    "=====================================================" << std::endl;
+}
+
+void print2() {
+    system("clear");
+    std::cout << "=====================================================" << std::endl <<
+    "DFS Solver" << std::endl << 
+    "=====================================================" << std::endl;
+}
+
+void print3() {
+    system("clear");
+    std::cout << "=====================================================" << std::endl <<
+    "BFS Solver" << std::endl << 
+    "=====================================================" << std::endl;
+}
+
+void resetGUI() {
+    std::cout << "Press [ENTER] to return to main menu... ";
+    std::cin.get();
+    system("clear");
+    printMenu();
+}
+
 bool menuChoice() { // Menu system
     std::string choice = userInput(); // Makes sure userinput is a valid option
 
@@ -43,62 +71,49 @@ bool menuChoice() { // Menu system
     return true;
 }
 
-void resetGUI() {
-    std::cout << "Press [ENTER] to return to main menu... ";
-    std::cin.get();
-    system("clear");
-    printMenu();
-}
-
 void GenerateMaze() {
-    system("clear");
-    std::cout << "=====================================================" << std::endl <<
-    "Generate Maze" << std::endl << 
-    "=====================================================" << std::endl;
-    std::string input = sizeOptions();
+    print1();
+    bool generator = generateOptions();
+    print1();
+    std::string size = sizeOptions();
 
     maze myMaze;
-    if(input == "2") {
-        system("clear");
-        std::cout << "=====================================================" << std::endl <<
-        "Generate Maze" << std::endl << 
-        "=====================================================" << std::endl;
+    if(size == "2") {
+        print1();
         int x = getMazeSize(0); // Gets width of maze from user
         int y = getMazeSize(1); // Gets height of maze from user
         std::cin.ignore();
         myMaze.generate(x, y); // Builds a grid of given width, height
     }
-    else if(input == "1") {
+    else if(size == "1") {
         myMaze.generate(11, 11);
     }
-    myMaze.DfsGenerator(); // Grid done, now filling paths
-    //Makes user interface cleaner
+    myMaze.pathGenerator(generator); // Grid done, now filling paths
+    system("clear");
+    myMaze.print();
+    // Makes user interface cleaner
     resetGUI();
 }
 
 void DFSSOLVER() {
-    system("clear");
-    std::cout << "=====================================================" << std::endl <<
-    "DFS Solver" << std::endl << 
-    "=====================================================" << std::endl;
-    std::string input = sizeOptions();
+    print2();
+    bool generator = generateOptions();
+    print2();
+    std::string size = sizeOptions();
 
     maze myMaze;
-    if(input == "2"){
-        system("clear");
-        std::cout << "=====================================================" << std::endl <<
-        "DFS Solver" << std::endl << 
-        "=====================================================" << std::endl;
+    if(size == "2"){
+        print2();
         int x = getMazeSize(0); // Gets width of maze from user
         int y = getMazeSize(1); // Gets height of maze from user
         std::cin.ignore();
         myMaze.generate(x, y); // Builds a grid of given width, height
     }
-    else if(input == "1") {
+    else if(size == "1") {
         myMaze.generate(11, 11);
     }
 
-    myMaze.DfsGenerator(); // Grid done, now filling paths
+    myMaze.pathGenerator(generator); // Grid done, now filling paths
     std::cout << "Press [ENTER] to see DFS solution.";
     std::cin.get();
 
@@ -109,27 +124,23 @@ void DFSSOLVER() {
 }
 
 void BFSSOLVER(){
-    system("clear");
-    std::cout << "=====================================================" << std::endl <<
-    "BFS Solver" << std::endl << 
-    "=====================================================" << std::endl;
-    std::string input = sizeOptions();
+    print3();
+    bool generator = generateOptions();
+    print3();
+    std::string size = sizeOptions();
 
     maze myMaze;
-    if(input == "2") {
-        system("clear");
-        std::cout << "=====================================================" << std::endl <<
-        "BFS Solver" << std::endl << 
-        "=====================================================" << std::endl;
+    if(size == "2") {
+        print3();
         int x = getMazeSize(0); // Gets width of maze from user
         int y = getMazeSize(1); // Gets height of maze from user
         std::cin.ignore();
         myMaze.generate(x, y); // Builds a grid of given width, height
     }
-    else if(input == "1") {
+    else if(size == "1") {
         myMaze.generate(11, 11);
     }
-    myMaze.DfsGenerator(); // Grid done, now filling paths
+    myMaze.pathGenerator(generator); // Grid done, now filling paths
     // Generates solution
     myMaze.BFS();
         
@@ -139,6 +150,23 @@ void BFSSOLVER(){
     myMaze.printBFS();
     //Makes user interface cleaner
     resetGUI();
+}
+
+std::string sizeOptions() {
+    std::cout << "1. Default Size" << std::endl <<
+    "2. Custom Size" << std::endl;
+    std::string input;
+    while(getline(std::cin, input)) {
+        if(input == "1" || input == "2") {
+            break;
+        }
+        else {
+            std::cerr << "Invalid menu command!" << std::endl <<
+            "Try Again!" << std::endl;
+        }
+    }
+    return input;
+
 }
 
 std::string userInput() { // Gets a user input for the menu options
@@ -157,12 +185,15 @@ std::string userInput() { // Gets a user input for the menu options
     return choice;
 }
 
-std::string sizeOptions() {
-    std::cout << "1. Default Size" << std::endl <<
-    "2. Custom Size" << std::endl;
+bool generateOptions() {
+    std::cout << "1. DFS Generator" << std::endl <<
+    "2. BFS Generator" << std::endl;
     std::string input;
     while(getline(std::cin, input)) {
         if(input == "1" || input == "2") {
+            if(input == "1") {
+                return true;
+            }
             break;
         }
         else {
@@ -170,8 +201,7 @@ std::string sizeOptions() {
             "Try Again!" << std::endl;
         }
     }
-    return input;
-
+    return false;
 }
 
 int getMazeSize(int check) { // Get a size for maze width or height

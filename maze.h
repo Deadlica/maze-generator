@@ -19,28 +19,34 @@ Siktar på betyget A
 class maze {
 public:
     static bool shouldAnimate;
-    maze(); // Constructor
-    ~maze(); // Destructor
+    static bool printToFile;
 
     void generate(int x, int y); // Generates grid
     void generateFromFile(int x, int y, std::vector<std::string> stringMaze);
-    void DfsGenerator(); // Fills grid with paths
-    void setWallsVisited(); // Checks all walls as visited
+    void pathGenerator(const bool generator); // Fills grid with paths
+    void BfsGenerator(); // Fills grid with paths using bfs algorithm
 
     void DFS(); // Depth-first search solver
     void BFS(); // Breadth-first search solver
 
+    void setWallsVisited(); // Checks all walls as visited
     void UnvisitAllCells(); // Unvisist paths, 'S', 'E'
+
+    int randomYCoordinate(); // Returns a random cell Y coordinate
+    int randomXCoordinate(); // Returns a random cell X coordinate
     int findStartCellX(); // Returns x coordinate of 'S'
     int findEndCellX(); // Returns x coordinate of 'E'
+
     int setStartCell(); // Sets a random start cell at top row
-    void setEndCell(); // Sets a random end cell as close to bottom right corner
+    int setEndCell(); // Sets a random end cell at bottom row
+    int getMazeWidth(); // Returns maze width
+    int getMazeHeight(); // Returns maze height
 
     void printBFS(); // Print BFS solution
     void print(); // Prints maze
 
 private:
-    struct coord {
+    struct coord { // Coordinate for nodes
         int x;
         int y;
     };
@@ -54,12 +60,14 @@ private:
     };
 
     std::vector<coord> getNeighbours(int x, int y, int check); // Fills vector with coordinates of visitable neighbours
-    bool isVisitable(int x, int y); // Checks if cell is visitable
     bool checkSubNeighbours(int x, int y);
+
+    bool isVisitable(int x, int y); // Checks if cell is visitable
     bool isBorder(int x, int y); // Checks if cell is a border cell
+    
+    void openPathConnection(coord n, coord neighbour);
+
     std::vector<std::vector<node>> grid; // Container to store all the nodes
-    node* s; // Start cell
-    node* e; // End cell
 };
 
 #endif

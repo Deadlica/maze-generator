@@ -10,5 +10,15 @@ program: main.cpp maze.cpp menu.cpp maze_txt.cpp
 run: program
 	./maze
 
+animate: program
+	./maze --animate
+
+file: program
+	clear
+	./maze < maze.txt
+
+file2: program
+	./maze < maze.txt > solution.txt
+
 del: program
 	rm maze

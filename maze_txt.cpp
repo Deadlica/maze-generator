@@ -93,17 +93,17 @@ bool checkMazeGraphics(const std::vector<std::string> tempMaze) { // Checks the 
     return true;
 }
 
+bool validWallChar(char graphic) { // Checks if a char is valid for the maze
+    if(graphic >= '!' && graphic < 'E' || graphic > 'E' && graphic < 'S' || graphic > 'S' && graphic <= '~') {
+        return true;
+    }
+    return false;
+}
+
 int getMazeFileWidth(const std::vector<std::string> tempMaze) { // Returns the maze width
     return tempMaze[0].length();
 }
 
 int getMazeFileHeight(const std::vector<std::string> tempMaze) { // Returns the maze height
     return tempMaze.size();
-}
-
-bool validWallChar(char graphic) { // Checks if a char is valid for the maze
-    if(graphic >= '!' && graphic < 'E' || graphic > 'E' && graphic < 'S' || graphic > 'S' && graphic <= '~') {
-        return true;
-    }
-    return false;
 }

@@ -13,15 +13,19 @@ Siktar på betyget A
 #include "maze_txt.h"
 
 int main(int argc, char** argv) {
-    if(argc > 1) {
+    if(argc > 1) { // Looking for animation flag
         std::string argument;
         argument = argv[1];
         if(argument == "--animate") {
             maze::shouldAnimate = true;
         }
     }
+    if(!isatty(STDOUT_FILENO)) {
+        maze::printToFile = true;
+    }
+    
     srand(time(0));
-    if(!isatty(STDIN_FILENO)) {
+    if(!isatty(STDIN_FILENO)) { // .txt maze file
         std::vector<std::string> tempMaze;
         std::string mazeRow;
         while(getline(std::cin, mazeRow)) { // Get all maze rows
@@ -42,7 +46,7 @@ int main(int argc, char** argv) {
         
     }
 
-    else {
+    else { // Regular program
         system("clear"); // Clears terminal
         printMenu(); // Print the menu
         while(menuChoice()) { ; }
