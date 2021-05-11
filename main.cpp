@@ -16,8 +16,14 @@ int main(int argc, char** argv) {
     if(argc > 1) { // Looking for animation flag
         std::string argument;
         argument = argv[1];
-        if(argument == "--animate") {
-            maze::shouldAnimate = true;
+        for(int i = 0; i < argc; i++) {
+            argument = argv[i];
+            if(argument == "--animate") {
+                maze::shouldAnimate = true;
+            }
+            else if(argument == "--char") {
+                maze::GUI = true;
+            }
         }
     }
     if(!isatty(STDOUT_FILENO)) {

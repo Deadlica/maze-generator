@@ -20,6 +20,7 @@ class maze {
 public:
     static bool shouldAnimate;
     static bool printToFile;
+    static bool GUI;
 
     void generate(int x, int y); // Generates grid
     void generateFromFile(int x, int y, std::vector<std::string> stringMaze);

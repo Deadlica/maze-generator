@@ -13,6 +13,7 @@ Siktar på betyget A
 
 bool maze::shouldAnimate = false;
 bool maze::printToFile = false;
+bool maze::GUI = false;
 
 void maze::generate(int x, int y) {
     for(int i = 0; i < y; i++) { // Iterate through row
@@ -80,6 +81,8 @@ void maze::pathGenerator(const bool generator) { // Generates paths in the grid 
     }
     setEndCell(); // Sets goal cell
     setWallsVisited();
+    system("clear");
+    print();
 }
 
 void maze::BfsGenerator() {
@@ -315,7 +318,7 @@ void maze::printBFS() {
 void maze::print() {
     for(int y = 0; y < grid.size(); y++) {
         for(int x = 0; x < grid[0].size(); x++) {
-            if(printToFile) {
+            if(printToFile || GUI) {
                 std::cout << grid[y][x].graphic;
             }
             else {
