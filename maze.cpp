@@ -340,6 +340,114 @@ void maze::print() {
     }
 }
 
+void maze::startGame() {
+    int key;
+    int escape = 0;
+
+    // Initialize curses
+    initscr();
+    clear();
+    noecho();
+    raw();
+    keypad(stdscr, TRUE);
+    refresh();
+
+    // Game start
+    UnvisitAllCells();
+    coord cell, prevCell, startCell, endCell;
+    endCell.x = findEndCellX();
+    endCell.y = grid.size() - 1;
+    startCell.x = findStartCellX();
+    startCell.y = 0;
+    cell.x = startCell.x;
+    cell.y = startCell.y;
+    grid[cell.y][cell.x].graphic = '*';
+    reset_shell_mode();
+    print();
+    reset_prog_mode();
+
+    while(1) {
+        key = getch();
+        switch(key) {
+            case KEY_UP:
+                system("clear");
+                reset_shell_mode();
+                if(isVisitable(cell.x, cell.y - 1) || (cell.x == startCell.x && cell.y - 1 == startCell.y)) {
+                    if(grid[cell.y - 1][cell.x].graphic == '*') {
+                        grid[cell.y][cell.x].graphic = ' ';
+                    }
+                    cell.y -= 1;
+                    grid[cell.y][cell.x].graphic = '*';
+                }
+                print();
+                std::cout << "UP" << std::endl;
+                reset_prog_mode();
+                break;
+            case KEY_DOWN:
+                system("clear");
+                reset_shell_mode();
+                if(isVisitable(cell.x, cell.y + 1) || grid[cell.y + 1][cell.x].graphic == 'E') {
+                    if(grid[cell.y + 1][cell.x].graphic == '*') {
+                        grid[cell.y][cell.x].graphic = ' ';
+                    }
+                    cell.y += 1;
+                    grid[cell.y][cell.x].graphic = '*';
+                    if(cell.x == endCell.x && cell.y == endCell.y) {
+                        print();
+                        std::cout << "Congratulations, you have solved the maze! :D" << std::endl;
+                        system("sleep 5s");
+                        escape = 27;
+                    }
+                }
+                print();
+                std::cout << "DOWN" << std::endl;
+                reset_prog_mode();
+                break;
+            case KEY_LEFT:
+                system("clear");
+                reset_shell_mode();
+                if(isVisitable(cell.x - 1, cell.y)) {
+                    if(grid[cell.y][cell.x - 1].graphic == '*') {
+                        grid[cell.y][cell.x].graphic = ' ';
+                    }
+                    cell.x -= 1;
+                    grid[cell.y][cell.x].graphic = '*';
+                }
+                print();
+                std::cout << "LEFT" << std::endl;
+                reset_prog_mode();
+                break;
+            case KEY_RIGHT:
+                system("clear");
+                reset_shell_mode();
+                if(isVisitable(cell.x + 1, cell.y)) {
+                    if(grid[cell.y][cell.x + 1].graphic == '*') {
+                        grid[cell.y][cell.x].graphic = ' ';
+                    }
+                    cell.x += 1;
+                    grid[cell.y][cell.x].graphic = '*';
+                }
+                print();
+                std::cout << "RIGHT" << std::endl;
+                reset_prog_mode();
+                break;
+            case 27: // Esc value
+                escape = 27;
+                break;
+            default:
+                break;
+        }
+        if(escape != 0) {
+            break;
+        }
+
+    }
+    clrtoeol();
+    refresh();
+    endwin();
+
+}
+
 // PRIVATE
 
 std::vector<maze::coord> maze::getNeighbours(int x, int y, int check) {

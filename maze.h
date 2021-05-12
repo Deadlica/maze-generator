@@ -10,6 +10,8 @@ Siktar på betyget A
 #define MAZE_H
 
 #include <iostream>
+#include <ncurses.h>
+#include <stdio.h>
 #include <vector>
 #include <string>
 #include <iterator>
@@ -45,6 +47,8 @@ public:
 
     void printBFS(); // Print BFS solution
     void print(); // Prints maze
+
+    void startGame();
 
 private:
     struct coord { // Coordinate for nodes

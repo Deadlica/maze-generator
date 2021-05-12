@@ -5,7 +5,7 @@
 #Siktar på betyget A
 
 program: main.cpp maze.cpp menu.cpp maze_txt.cpp
-	g++ -o maze main.cpp maze.cpp menu.cpp maze_txt.cpp -g
+	g++ -o maze main.cpp maze.cpp menu.cpp maze_txt.cpp -g -lncurses
 
 run: program
 	./maze
