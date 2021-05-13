@@ -217,6 +217,8 @@ std::string userInput() { // Gets a user input for the menu options
             badInput = false;
         }
         else { // Bad input
+            system("clear");
+            printMenu();
             std::cerr << "Invalid menu command!" << std::endl <<
             "Try Again!" << std::endl;
         }

@@ -344,6 +344,23 @@ void maze::startGame() {
     int key;
     int escape = 0;
 
+    // Figure out shortest path
+    BFS();
+    coord cell, prevCell, startCell, endCell;
+    int shortestPath = 1; // Counts steps
+    cell.x = findEndCellX();
+    cell.y = grid.size() - 1;
+    if(!(grid[cell.y][cell.x].parent.x == 0 && grid[cell.y][cell.x].parent.y == 0)) {
+        while(grid[cell.y][cell.x].graphic != 'S') { // Going backwards in maze till cell is at 'S' cell
+            shortestPath++;
+            prevCell = cell;
+            // Change cell to parent coords
+            cell.x = (grid[prevCell.y][prevCell.x]).parent.x;
+            cell.y = (grid[prevCell.y][prevCell.x]).parent.y;
+        }
+    }
+
+
     // Initialize curses
     initscr();
     clear();
@@ -353,8 +370,8 @@ void maze::startGame() {
     refresh();
 
     // Game start
+    int stepCounter = 0;
     UnvisitAllCells();
-    coord cell, prevCell, startCell, endCell;
     endCell.x = findEndCellX();
     endCell.y = grid.size() - 1;
     startCell.x = findStartCellX();
@@ -373,6 +390,7 @@ void maze::startGame() {
                 system("clear");
                 reset_shell_mode();
                 if(isVisitable(cell.x, cell.y - 1) || (cell.x == startCell.x && cell.y - 1 == startCell.y)) {
+                    stepCounter++;
                     if(grid[cell.y - 1][cell.x].graphic == '*') {
                         grid[cell.y][cell.x].graphic = ' ';
                     }
@@ -387,6 +405,7 @@ void maze::startGame() {
                 system("clear");
                 reset_shell_mode();
                 if(isVisitable(cell.x, cell.y + 1) || grid[cell.y + 1][cell.x].graphic == 'E') {
+                    stepCounter++;
                     if(grid[cell.y + 1][cell.x].graphic == '*') {
                         grid[cell.y][cell.x].graphic = ' ';
                     }
@@ -394,8 +413,11 @@ void maze::startGame() {
                     grid[cell.y][cell.x].graphic = '*';
                     if(cell.x == endCell.x && cell.y == endCell.y) {
                         print();
-                        std::cout << "Congratulations, you have solved the maze! :D" << std::endl;
-                        system("sleep 5s");
+                        std::cout << "Congratulations, you have solved the maze! :D" << std::endl
+                        << "It took you " << stepCounter << " steps to solve the maze." << std::endl
+                        << "Shortest path is " << shortestPath - 1 << " steps." << std::endl << std::endl
+                        << "Press [ENTER] to return to main menu";
+                        std::cin.get();
                         escape = 27;
                     }
                 }
@@ -407,6 +429,7 @@ void maze::startGame() {
                 system("clear");
                 reset_shell_mode();
                 if(isVisitable(cell.x - 1, cell.y)) {
+                    stepCounter++;
                     if(grid[cell.y][cell.x - 1].graphic == '*') {
                         grid[cell.y][cell.x].graphic = ' ';
                     }
@@ -421,6 +444,7 @@ void maze::startGame() {
                 system("clear");
                 reset_shell_mode();
                 if(isVisitable(cell.x + 1, cell.y)) {
+                    stepCounter++;
                     if(grid[cell.y][cell.x + 1].graphic == '*') {
                         grid[cell.y][cell.x].graphic = ' ';
                     }
