@@ -4,7 +4,7 @@ This program generates mazes with either dfs or bfs algorithms. It can also solv
 
 ## First time usage
 
-To setup compiled file type the following in the terminal
+To compile file for first time usage, type the following in the terminal
 
 ```bash
 make
