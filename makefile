@@ -13,6 +13,12 @@ run: program
 animate: program
 	./maze --animate
 
+char: program
+	./maze --char
+
+charAnimate: program
+	./maze --char --animate
+
 file: program
 	clear
 	./maze < maze.txt
